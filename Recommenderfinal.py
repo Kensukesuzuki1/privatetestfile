@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[4]:
-
-
 import pandas as pd
 import argparse
 from argparse import ArgumentParser
@@ -17,7 +11,8 @@ from surprise import Dataset
 from surprise.model_selection import cross_validate
 from surprise import Reader
 
-def recommender(df, user_id):
+def recommender(data, user_id, output_file):
+    df = pd.read_csv(data) 
     f = ['count','mean']
     df_model_summary = df.groupby('MODEL/DESC')['Rating'].agg(f)
     model_benchmark = round(df_model_summary['count'].quantile(0.8),0)
@@ -38,18 +33,15 @@ def recommender(df, user_id):
     user = user[~user['Items'].isin(drop_model_list)]
     user['Estimate_Score'] = user['Items'].apply(lambda x: model.predict(user_id, x).est)
     user_recommendation = user.sort_values('Estimate_Score', ascending=False)
-    return user_recommendation
-
-
+    user_recommendation.to_csv(output_file, index = False)
+    
 if __name__ == '__main__': 
     parser = argparse.ArgumentParser() 
     parser.add_argument('f1')
     parser.add_argument('f2')
+    parser.add_argument('o1')
     args = parser.parse_args()
-    recommender(args.f1, args.f2)
-
-
-# In[ ]:
+    recommender(args.f1, args.f2, args.o1)
 
 
 

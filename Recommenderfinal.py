@@ -38,9 +38,8 @@ def recommender(data):
 if __name__ == '__main__': 
     parser = argparse.ArgumentParser() 
     parser.add_argument('f1')
-    parser.add_argument('o1')
     args = parser.parse_args()
-    recommender(args.f1, args.o1)
+    recommender(args.f1)
 
 
 

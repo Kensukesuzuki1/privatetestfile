@@ -11,7 +11,7 @@ from surprise import Dataset
 from surprise.model_selection import cross_validate
 from surprise import Reader
 
-def recommender(data, user_id, output_file):
+def recommender(data, output_file):
     df = pd.read_csv(data) 
     f = ['count','mean']
     df_model_summary = df.groupby('MODEL/DESC')['Rating'].agg(f)
@@ -31,17 +31,16 @@ def recommender(data, user_id, output_file):
     user = df_title.copy()
     user = user.reset_index()
     user = user[~user['Items'].isin(drop_model_list)]
-    user['Estimate_Score'] = user['Items'].apply(lambda x: model.predict(user_id, x).est)
+    user['Estimate_Score'] = user['Items'].apply(lambda x: model.predict(52354, x).est)
     user_recommendation = user.sort_values('Estimate_Score', ascending=False)
     user_recommendation.to_csv(output_file, index = False)
     
 if __name__ == '__main__': 
     parser = argparse.ArgumentParser() 
     parser.add_argument('f1')
-    parser.add_argument('f2')
     parser.add_argument('o1')
     args = parser.parse_args()
-    recommender(args.f1, args.f2, args.o1)
+    recommender(args.f1, args.o1)
 
 
 
